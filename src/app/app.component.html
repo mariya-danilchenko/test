@@ -1,6 +1,7 @@
 <div>
 <h1>{{ title | titlecase }}</h1>
-  <app-product></app-product>
-  <app-form></app-form>
 
+<router-outlet></router-outlet>
+  <button routerLink="/form">Button1</button>
+  <button (click)="go()">Button2</button>
 </div>

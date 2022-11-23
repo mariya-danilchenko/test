@@ -1,4 +1,11 @@
 import { Component } from '@angular/core';
+import {Router} from "@angular/router";
+
+interface Person {
+  name: string;
+  surname: string;
+  age: number | null;
+}
 
 @Component({
   selector: 'app-root',
@@ -6,51 +13,159 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'test';
 
+  constructor(public router:Router) {
 
-  ngOnInit(){
-    const arr1 = [{
+  }
+
+  go(){
+    this.router.navigate(["/product"])
+  }
+
+  title: string = 'test';
+
+  object1: Person = {
+    name: 'Tom',
+    surname: 'Tom1',
+    age: null
+  }
+
+  array1: {}[] = [
+    {
       a: {
         name: 'Tom',
         surname: 'Tom1'
       }
     },
-      {
-        b: {
-          name: 'Tom B',
-          surname: 'Tom1 B'
-        }
-      },
-      {
-        c: {
-          name: 'Tom C',
-          surname: 'Tom1 C'
-        }
-      },
-      {
-        d: {
-          name: 'Tom D',
-          surname: 'Tom1 D'
-        }
-      },
-    ]
+    {
+      b: {
+        name: 'Tom B',
+        surname: 'Tom1 B'
+      }
+    },
+    {
+      c: {
+        name: 'Tom C',
+        surname: 'Tom1 C'
+      }
+    },
+    {
+      d: {
+        name: 'Tom D',
+        surname: 'Tom1 D'
+      }
+    },
+  ];
 
-    const arr2 = [{
+  array2: {}[] = [
+    {
       a: {
         age: 15
       }
     },
-      {
-        b: {
-          age: 10
-        }
-      },
-      {
-        d: {
-          age: 5
-        }
-      },
-    ]
+    {
+      b: {
+        age: 10
+      }
+    },
+    {
+      d: {
+        age: 5
+      }
+    },
+  ];
+
+  getSmth(): string {
+    return this.title;
   }
+
+  ngOnInit() {
+    //Массивы
+    //this.array1.forEach()
+    //this.array1.filter()
+    //this.array1.map()
+    //this.array1.reduce()
+    //this.array1.some()
+    //this.array1.every()
+    //this.array1.find()
+
+
+    //Объекты
+    //Object.values(this.object1)
+    //Object.keys(this.object1)
+    //Object.assign()
+
+
+    this.makeSolution1();
+  }
+
+  makeSolution1(): void {
+    const result = this.array1
+      .reduce((acc: {}[], curr: any) => {
+        let objectWithAge = null
+
+        Object.keys(curr).forEach(key => {
+          objectWithAge = this.getNewObjectIfFoundKey(this.array2, key, curr)
+        })
+
+        return [
+          ...acc,
+          objectWithAge ?? curr
+        ];
+
+      }, [])
+
+    console.log(result)
+  }
+
+  getNewObjectIfFoundKey(array: any[], keyName: string, curr: any): object | null{
+    const valuesFromArray2 = this.getValuesByKeyFromObject(array, keyName)
+
+    if (!!valuesFromArray2.length) {
+      return this.getNewObjectWithKey(keyName, curr[keyName], valuesFromArray2[0])
+    }
+
+    return null
+  }
+
+  getValuesByKeyFromObject(array: any[], keyName: string,): object[] {
+    const objectFromArray2 = this.getObjectByKey(array, keyName)
+
+    return Object.values(objectFromArray2 ?? {})
+  }
+
+  getNewObjectWithKey(keyName: string, value1: object, value2: object): object {
+    return {
+      [keyName]: {
+        ...value1,
+        ...value2
+      }
+    }
+  }
+
+  getObjectByKey(array: any[], keyName: string, ): object | undefined {
+    return array.find(el => !!el[keyName])
+  }
+
+  getNewObject(): object {
+    return {
+      ...this.object1,
+      age: 5
+    }
+  }
+
+  getNewObjectUnsafe(): object {
+    this.object1.age = 5
+
+    return this.object1;
+  }
+
+  getNewArray(): Person[] {
+    return [this.object1, {
+      name: 'Tom2',
+      surname: 'Toms surname',
+      age: 10
+    }]
+  }
+
 }
