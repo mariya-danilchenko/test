@@ -96,7 +96,8 @@ export class AppComponent {
     //Object.assign()
 
 
-    this.makeSolution1();
+    //this.makeSolution1();
+    this.makeSolution2();
   }
 
   makeSolution1(): void {
@@ -118,6 +119,35 @@ export class AppComponent {
     console.log(result)
   }
 
+  makeSolution2(): void {
+    const result = this.array1.map((el) => {
+      const array1ElData = this.getFirstProperty(el);
+      const valueByKeyFromArray2 = this.getValuesByKeyFromObject(this.array2, array1ElData.key)
+
+      return {
+        ...array1ElData.value,
+        ...(valueByKeyFromArray2[0] ?? {})
+      }
+    })
+
+    console.log(result)
+  }
+
+  getFirstProperty(obj: any = {}): any {
+    const key = Object.keys(obj ?? {})[0] ?? '';
+
+    return {
+      value: obj[key],
+      key
+    };
+  }
+
+  getValuesByKeyFromObject(array: any[], keyName: string,): object[] {
+    const objectFromArray2 = this.getObjectByKey(array, keyName)
+
+    return Object.values(objectFromArray2 ?? {})
+  }
+
   getNewObjectIfFoundKey(array: any[], keyName: string, curr: any): object | null{
     const valuesFromArray2 = this.getValuesByKeyFromObject(array, keyName)
 
@@ -126,12 +156,6 @@ export class AppComponent {
     }
 
     return null
-  }
-
-  getValuesByKeyFromObject(array: any[], keyName: string,): object[] {
-    const objectFromArray2 = this.getObjectByKey(array, keyName)
-
-    return Object.values(objectFromArray2 ?? {})
   }
 
   getNewObjectWithKey(keyName: string, value1: object, value2: object): object {
