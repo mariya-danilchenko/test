@@ -35,6 +35,10 @@ export class AppComponent {
       a: {
         name: 'Tom',
         surname: 'Tom1'
+      },
+      e: {
+        name: '1',
+        surname: '2'
       }
     },
     {
@@ -124,10 +128,13 @@ export class AppComponent {
       const array1ElData = this.getFirstProperty(el);
       const valueByKeyFromArray2 = this.getValuesByKeyFromObject(this.array2, array1ElData.key)
 
-      return {
-        ...array1ElData.value,
-        ...(valueByKeyFromArray2[0] ?? {})
-      }
+      return valueByKeyFromArray2.length ? {
+        ...el,
+        [array1ElData.key]: {
+          ...array1ElData.value,
+          ...valueByKeyFromArray2[0]
+        }
+      }: el
     })
 
     console.log(result)
